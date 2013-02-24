@@ -4,13 +4,20 @@ import System.Environment (getArgs)
 import System.Cmd         (rawSystem)
 import System.Directory
 import System.FilePath
+import System.Platform
 import Data.List ( (\\) )
 
 hmake :: FilePath -> IO ()
 hmake arg = do
   getDirectoryContents "." >>= \x -> mapM_ removeFile $ fExe $ fDir x
   rawSystem "ghc" ["-O2", "--make", ban]
-  rawSystem "strip" [ban ++ ".exe"]
+  case os_type of
+    MS_Windows -> do
+      rawSystem "strip" [ban ++ ".exe"]
+      return ()
+    Unix       -> do
+      rawSystem "strip" [ban]
+      return ()
   getDirectoryContents "." >>= \x -> mapM_ removeFile $ fObj $ fDir x
  where
   ban       = takeBaseName arg

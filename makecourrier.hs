@@ -26,6 +26,6 @@ main = do
        V.mapM_ creaSubM mySub
        exitSuccess
  where
-  mySub = V.fromList ["mainG","proxy","haskell","empire","envoyés","kapA","kapE","spam","var"]
+  mySub = V.fromList ["proxy","haskell","empire","envoyés","kapA","kapE","spam","var"]
 
 --EOF
