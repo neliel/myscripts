@@ -2,23 +2,31 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import System.Directory
-import Helpers.Directory
 import System.FilePath
 import System.Random
+import System.Platform
 import Helpers.AES
 import System.Environment (getArgs)
 import System.Cmd         (rawSystem)
+import Data.List          ( (\\) )
 import qualified Data.List.Split        as L
 import qualified Codec.Archive.Tar      as Tar
 
-key = "/home/sarfraz/.keyrc"
+key :: String
+key =
+  case os_type of
+    MS_Windows -> "C:\\Users\\Sarfraz\\.keyrc"
+    Unix       -> "/home/sarfraz/.keyrc"
+
+fDirList :: [String] -> [String]
+fDirList = ( \\ [".",".."] )
 
 -- | Create an encrypted tarball from a file
 func :: String -> FilePath -> IO ()
 func key name = do
     Tar.create tarName "." [name]
     encryptFromToFile key tarName crptName
-    deleteAnyway tarName
+    removeFile tarName
     return ()
   where
     tarName       = name <.> ".tar"
@@ -35,7 +43,7 @@ unfunc :: String -> FilePath -> IO ()
 unfunc key name = do
     decryptFromToFile key crptName tarName
     Tar.extract "." tarName
-    deleteAnyway tarName
+    removeFile tarName
     return ()
   where
     tName          = head $ L.split (L.onSublist ".tar.crpt") name
