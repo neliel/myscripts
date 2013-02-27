@@ -10,42 +10,31 @@ import System.Environment   (getArgs)
 import Data.List            (nub)
 import System.Random
 import Crypto.Random.AESCtr (makeSystem)
+import Control.Applicative  ( (<$>) )
+import Control.Monad        (replicateM)
 
+randomItem :: [a] -> IO a
+randomItem xs = (xs!!)  <$> randomRIO (0, length xs - 1)
 
+genFromMask :: [String] -> IO String
+genFromMask = mapM randomItem
 
+genMeSome :: [String] -> Int -> IO [String]
+genMeSome mask n = do
+  glist <- replicateM (n*10) (genFromMask mask)
+  return $ take n $ nub glist
 
 -- | La plage "SS" est interdite en France; le nb de combinaisons limité à 675 324
-plaqueFra :: IO String
-plaqueFra = do
-  g <- makeSystem
-  return $ "SS-" ++ take 3 (randomRs ('0','9') g) ++ "-" ++ take 2 (randomRs ('A','Z') g)
-
 genFra :: Int -> IO [String]
-genFra n = do
-  glist <- sequence $ take (n*2) $ repeat plaqueFra
-  return $ take n $ nub $ glist
+genFra = genMeSome ["S","S","-",['0'..'9'],['0'..'9'],['0'..'9'],"-",['A'..'Z'],['A'..'Z']]
 
 -- | Les voyelles ainsi que les lettres Q sont interdites
-plaqueEsp :: IO String
-plaqueEsp = do
-  g <- makeSystem
-  return $ take 4 (randomRs ('0','9') g) ++ " " ++ take 3 (randomRs ('A','Z') g)
-
 genEsp :: Int -> IO [String]
-genEsp n = do
-  glist <- sequence $ take (n*10) $ repeat plaqueEsp
-  return $ take n $ nub $ filter (\x -> any (\y -> y `elem` "AEIOUYQ") x) glist
+genEsp = genMeSome [['0'..'9'],['0'..'9'],['0'..'9'],['0'..'9']," ",['A'..'Z'],"AEIOUYQ",['A'..'Z']]
 
 -- | La plage allant de 30000 à 49999 n'est pas utilisée
-plaqueDnk :: IO String
-plaqueDnk = do
-  g <- makeSystem
-  return $ take 2 (randomRs ('A','Z') g) ++ " " ++ take 5 (randomRs ('A','Z') g)
-
 genDnk :: Int -> IO [String]
-genDnk n = do
-  glist <- sequence $ take (n*2) $ repeat plaqueDnk
-  return $ take n $ nub $ glist
+genDnk = genMeSome [['A'..'Z'],['A'..'Z']," ","34",['0','9'],['0','9'],['0','9'],['0','9']]
 
 main :: IO ()
 main = do
@@ -57,14 +46,14 @@ main = do
       --"bra" -> writeFile (unlines $ genBra $ read n) fi
       --"deu" -> writeFile (unlines $ genDeu $ read n) fi
       "dnk" -> do
-        list <- (genDnk $ read n)
+        list <- genDnk $ read n
         writeFile fi $ unlines list
       "esp" -> do
-        list <- (genEsp $ read n)
+        list <- genEsp $ read n
         writeFile fi $ unlines list
       --"fin" -> writeFile (unlines $ genFin $ read n) fi
       "fra" -> do
-        list <- (genFra $ read n)
+        list <- genFra $ read n
         writeFile fi $ unlines list
       --"gbr" -> writeFile (unlines $ genGbr $ read n) fi
       --"hun" -> writeFile (unlines $ genHun $ read n) fi
