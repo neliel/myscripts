@@ -10,7 +10,7 @@ import Data.List ( (\\) )
 hmake :: FilePath -> IO ()
 hmake arg = do
   getDirectoryContents "." >>= \x -> mapM_ removeFile $ fExe $ fDir x
-  rawSystem "ghc" ["-O2", "--make", ban]
+  rawSystem "ghc" ["-O2", "-rtsopts", "--make", ban]
   case os_type of
     MS_Windows -> do
       rawSystem "strip" [ban ++ ".exe"]
