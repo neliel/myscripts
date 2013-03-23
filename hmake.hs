@@ -20,10 +20,10 @@ hmake arg = do
       return ()
   getDirectoryContents "." >>= \x -> mapM_ removeFile $ fObj $ fDir x
  where
-  ban       = takeBaseName arg
-  fExe      = filter ( \x -> takeExtension x `elem` [".exe",""] && takeBaseName x == takeBaseName arg )
-  fObj      = filter ( \x -> takeExtension x `elem` [".hi", ".o"] )
-  fDir      = ( \\ [".",".."] )
+  ban  = takeBaseName arg
+  fExe = filter (\x -> takeExtension x `elem` [".exe",""] && takeBaseName x == takeBaseName arg)
+  fObj = filter (\x -> takeExtension x `elem` [".hi", ".o"])
+  fDir = (\\ [".",".."])
 
 main :: IO ()
 main = do
