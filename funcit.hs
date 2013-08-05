@@ -15,7 +15,7 @@ import qualified Codec.Archive.Tar      as Tar
 key :: String
 key =
   case os_type of
-    MS_Windows -> "C:\\Users\\Sarfraz\\.keyrc"
+    MS_Windows -> "C:\\Users\\Sarfraz\\_keyrc"
     Unix       -> "/home/sarfraz/.keyrc"
 
 fDirList :: [String] -> [String]

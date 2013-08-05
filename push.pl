@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
 use strict;
+use warnings;
 
 system "git add .";
 my $deleted = `git ls-files --deleted`;
@@ -12,5 +13,7 @@ unless ($deleted eq "") {
 }
 system "git commit -m " . $ARGV[0];
 system "git push -u origin master";
+
+exit 0;
 
 #EOF

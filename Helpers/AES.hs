@@ -18,7 +18,7 @@ key k = do
     file <- doesFileExist k
     if file
     then BS.readFile k
-    else return $ BS.pack k
+    else fail "keyrc does not exist"
 
 encrypt :: String -> BL.ByteString -> IO BL.ByteString
 encrypt k bs =
