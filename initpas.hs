@@ -1,13 +1,14 @@
 #!/usr/bin/env runhaskell
 {-# LANGUAGE OverloadedStrings #-}
 
---  initid.hs
+--  initpas.hs
 --  02.08.2013
 
 import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Builder
 import Data.Time
-import Data.Monoid ((<>))
+import System.Directory (getHomeDirectory)
+import Data.Monoid      ((<>))
 
 data Identity = Identity
     { title    :: String
@@ -39,10 +40,13 @@ writeID ido = do
 
 main :: IO ()
 main = do
+  home <- getHomeDirectory
   initGUI
   build <- builderNew
   builderAddFromFile build "initpas.glade"
   mainWindow <- builderGetObject build castToWindow "mainWindow"
+  pix        <- pixbufNewFromFile (home <> "/.opt/img/initpas_fav.png")
+  windowSetIcon mainWindow $ Just pix
   mainWindow `onDestroy` mainQuit
   mQuit <- builderGetObject build castToButton "quit"
   mQuit `onClicked` mainQuit
@@ -75,3 +79,4 @@ main = do
   mainGUI
 
 --eof
+

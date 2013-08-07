@@ -4,12 +4,13 @@
 --  initid.hs
 --  02.08.2013
 
-import System.Cmd    (rawSystem)
 import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Builder
 import Data.Maybe.Utils
 import Data.Time
-import Data.Monoid ((<>))
+import System.Cmd       (rawSystem)
+import System.Directory (getHomeDirectory)
+import Data.Monoid      ((<>))
 import System.Random
 
 data Identity = Identity
@@ -17,7 +18,6 @@ data Identity = Identity
     , lastname :: String
     , sex      :: String
     }
-
 
 writeID :: Identity -> IO ()
 writeID ido = do
@@ -48,10 +48,13 @@ writeID ido = do
 
 main :: IO ()
 main = do
+  home <- getHomeDirectory
   initGUI
   build <- builderNew
   builderAddFromFile build "initid2.glade"
   mainWindow <- builderGetObject build castToWindow "mainWindow"
+  pix        <- pixbufNewFromFile (home <> "/.opt/img/initid_fav.png")
+  windowSetIcon mainWindow $ Just pix
   mainWindow `onDestroy` mainQuit
   mQuit <- builderGetObject build castToButton "quit"
   mQuit `onClicked` mainQuit
