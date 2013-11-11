@@ -7,8 +7,10 @@
 import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Builder
 import Data.Time
-import System.Directory (getHomeDirectory)
-import Data.Monoid      ((<>))
+import Data.Char           (toLower)
+import System.Directory    (getHomeDirectory)
+import Data.Monoid         ((<>))
+import Control.Applicative ((<$>))
 
 data Identity = Identity
     { title    :: String
@@ -65,7 +67,7 @@ main = do
         commenta  <- entryGetText commente
         let
             ido = Identity
-                { title    = titlea
+                { title    = toLower <$> titlea
                 , user     = usera
                 , password = passworda
                 , onana    = onanaa

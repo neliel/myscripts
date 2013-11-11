@@ -91,7 +91,7 @@ sub makeTransact
 ##################### MAIN #####################
 
 my $file   = getPipe();
-my $dbPath = "/home/sarfraz/bmsg.db";
+my $dbPath = "/home/sarfraz/Documents/backup/bmsg.db";
 makeTransact($dbPath, $file);
 exit 0;
 

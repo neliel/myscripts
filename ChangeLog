@@ -6,3 +6,14 @@
 * 0.0.2
 	+ added history folder
 	+ added favicons to initid and initpas
+
+* 0.0.3
+	+ added force lowercase in initpas and initid for filename
+
+* 0.0.4
+	+ deleted not so used scripts
+* 0.0.0.5
+	+ backup commit
+* 0.0.0.6
+	+ added mvto script
+	+ removed not used

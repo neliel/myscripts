@@ -8,9 +8,11 @@ import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Builder
 import Data.Maybe.Utils
 import Data.Time
-import System.Cmd       (rawSystem)
-import System.Directory (getHomeDirectory)
-import Data.Monoid      ((<>))
+import Data.Char           (toLower)
+import System.Cmd          (rawSystem)
+import System.Directory    (getHomeDirectory)
+import Data.Monoid         ((<>))
+import Control.Applicative ((<$>))
 import System.Random
 
 data Identity = Identity
@@ -25,7 +27,7 @@ writeID ido = do
     rpc  <- getStdGen
     let
         (y,m,d)       = toGregorian $ utctDay c
-        file          = foldl (<>) [] [name ido, "_", lastname ido, ".idt"]
+        file          = toLower <$> foldl (<>) [] [name ido, "_", lastname ido, ".idt"]
         (cp, g)       = randomR (42000::Int, 42999) rpc
         tel           = take 8 $ randomRs ('0', '1') g
         (bday, bdg)   = randomR (1::Int, 30) g
@@ -51,7 +53,7 @@ main = do
   home <- getHomeDirectory
   initGUI
   build <- builderNew
-  builderAddFromFile build "initid2.glade"
+  builderAddFromFile build "initid.glade"
   mainWindow <- builderGetObject build castToWindow "mainWindow"
   pix        <- pixbufNewFromFile (home <> "/.opt/img/initid_fav.png")
   windowSetIcon mainWindow $ Just pix
