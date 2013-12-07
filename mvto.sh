@@ -61,7 +61,7 @@ TORRENT_FILEPATH_EXTENSION="${TORRENT_FILEPATH_BASENAME##*.}"
 # Main
 #==========================================================================
 
-mv $TORRENT_FILEPATH $WATCH_FOLDER
+mv "$TORRENT_FILEPATH" $WATCH_FOLDER
 
 #==========================================================================
 # End sequence
