@@ -17,3 +17,8 @@
 * 0.0.0.6
 	+ added mvto script
 	+ removed not used
+* 0.0.0.7
+	+ added urxvt and mutt starting scripts
+	+ fixed mvto string escaping
+	+ fixed push removing git file condition
+	+ renamed History to archive

@@ -1,40 +1,34 @@
-#!/usr/bin/perl -w
+#!/bin/bash
 #@(#)----------------------------------------------------------------------
-#@(#) OBJET            : Git commit automation
+#@(#) OBJET            : urxvt daemon and client launcher
 #@(#)----------------------------------------------------------------------
 #@(#) AUTEUR           : Kapasi Sarfraz
-#@(#) DATE DE CREATION :
+#@(#) DATE DE CREATION : 16.11.2013
 #@(#) VERSION          : 0.0.0.1
 
 #==========================================================================
 #
 # USAGE
-#   ./push.pl version number
+#   ./urxvt.sh [urxvt_options]
 #
 # DESCRIPTION
-#   This script allows for common commit related tasks automation
+#   Launch the urxvt daemon if not started and start client
 #
 # RETURN CODES
 #   0    Normal end
 #   1    Anormal end
+#   3    urxvt command not found
 #
 # CODES NOTICE
-#   NOPE
+#   3   Install the urxvt command
 #
 # OPTIONS
-#   $ARGV[0] : version number of repo push (in the form of commit msg)
-#
-# DEPENDENCIES
 #   NOPE
 #
+# DEPENDENCIES
+#   urxvt
+#
 #==========================================================================
-
-#==========================================================================
-# Imports
-#==========================================================================
-
-use strict;
-use constant { TRUE  => 1, FALSE => 0 };
 
 #==========================================================================
 # Functions
@@ -43,31 +37,31 @@ use constant { TRUE  => 1, FALSE => 0 };
 #==========================================================================
 # Options
 #==========================================================================
+# NOPE
+#==========================================================================
+# Variables
+#==========================================================================
 
-my $COMMIT_MSG = "$ARGV[0]";
+URXVTC=urxvtc
+URXVTD=urxvtd
 
 #==========================================================================
 # Environment
 #==========================================================================
-# NOPE
+
+[ -z $URXVTC ] && exit 3
+[ -z $URXVTD ] && exit 3
+
 #==========================================================================
 # Main
 #==========================================================================
 
-system "git add .";
-
-my $deleted = `git ls-files --deleted`;
-if (defined $deleted)
-  {
-    my @deleted = split("\n", $deleted);
-    for (my $i = 0; $i < @deleted; $i++)
-      {
-      system "git rm $deleted[$i]";
-    }
-  }
-
-system "git commit -m \"$COMMIT_MSG\"";
-system "git push -u origin master";
+cd
+$URXVTC "$@"
+if [ $? -eq 2 ]; then
+   $URXVTD -q -o -f
+   $URXVTC "$@"
+fi
 
 #==========================================================================
 # End sequence
